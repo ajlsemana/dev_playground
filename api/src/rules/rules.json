@@ -1,0 +1,6 @@
+[
+  { "name": "DPD_1_7", "when": { "dpdMin": 1, "dpdMax": 7 }, "then": { "stage": "SOFT", "assignGroup": "Tier1" } },
+  { "name": "DPD_8_30", "when": { "dpdMin": 8, "dpdMax": 30 }, "then": { "stage": "HARD", "assignGroup": "Tier2" } },
+  { "name": "DPD_GT_30", "when": { "dpdMin": 31 }, "then": { "stage": "LEGAL", "assignGroup": "Legal" } },
+  { "name": "RISK_GT_80_OVERRIDE", "when": { "riskMin": 81 }, "then": { "assignedTo": "SeniorAgent", "override": true } }
+]
