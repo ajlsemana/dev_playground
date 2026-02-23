@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CasesFilters as Filters } from "@/hooks/useCases";
 
 type Props = {
@@ -15,15 +16,41 @@ export default function CasesFilters({
   onReset,
   disabled,
 }: Props) {
-  return (
-    <div className="flex flex-wrap gap-4 items-end">
+  const [local, setLocal] = useState<Filters>(value);
 
+  useEffect(() => {
+    setLocal(value);
+  }, [value]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    onChange(local);
+  }
+
+  function handleReset() {
+    setLocal({
+      status: "",
+      stage: "",
+      assignedTo: "",
+      dpdMin: "",
+      dpdMax: "",
+    });
+    onReset();
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-wrap gap-4 items-end"
+    >
       <div className="flex flex-col gap-1">
         <label className="text-xs text-gray-500">Status</label>
         <select
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          value={value.status || ""}
-          onChange={(e) => onChange({ status: e.target.value })}
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"
+          value={local.status || ""}
+          onChange={(e) =>
+            setLocal({ ...local, status: e.target.value })
+          }
           disabled={disabled}
         >
           <option value="">All Status</option>
@@ -37,9 +64,11 @@ export default function CasesFilters({
       <div className="flex flex-col gap-1">
         <label className="text-xs text-gray-500">Stage</label>
         <select
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          value={value.stage || ""}
-          onChange={(e) => onChange({ stage: e.target.value })}
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"
+          value={local.stage || ""}
+          onChange={(e) =>
+            setLocal({ ...local, stage: e.target.value })
+          }
           disabled={disabled}
         >
           <option value="">All Stage</option>
@@ -52,10 +81,12 @@ export default function CasesFilters({
       <div className="flex flex-col gap-1">
         <label className="text-xs text-gray-500">Assigned To</label>
         <input
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"
           placeholder="Assigned To"
-          value={value.assignedTo || ""}
-          onChange={(e) => onChange({ assignedTo: e.target.value })}
+          value={local.assignedTo || ""}
+          onChange={(e) =>
+            setLocal({ ...local, assignedTo: e.target.value })
+          }
           disabled={disabled}
         />
       </div>
@@ -63,11 +94,13 @@ export default function CasesFilters({
       <div className="flex flex-col gap-1">
         <label className="text-xs text-gray-500">DPD Min</label>
         <input
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-24"
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm w-24 focus:ring-2 focus:ring-indigo-500"
           placeholder="Min"
           inputMode="numeric"
-          value={value.dpdMin || ""}
-          onChange={(e) => onChange({ dpdMin: e.target.value })}
+          value={local.dpdMin || ""}
+          onChange={(e) =>
+            setLocal({ ...local, dpdMin: e.target.value })
+          }
           disabled={disabled}
         />
       </div>
@@ -75,23 +108,33 @@ export default function CasesFilters({
       <div className="flex flex-col gap-1">
         <label className="text-xs text-gray-500">DPD Max</label>
         <input
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-24"
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm w-24 focus:ring-2 focus:ring-indigo-500"
           placeholder="Max"
           inputMode="numeric"
-          value={value.dpdMax || ""}
-          onChange={(e) => onChange({ dpdMax: e.target.value })}
+          value={local.dpdMax || ""}
+          onChange={(e) =>
+            setLocal({ ...local, dpdMax: e.target.value })
+          }
           disabled={disabled}
         />
       </div>
 
       <button
-        onClick={onReset}
+        type="submit"
+        disabled={disabled}
+        className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+      >
+        Apply
+      </button>
+
+      <button
+        type="button"
+        onClick={handleReset}
         disabled={disabled}
         className="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded-md transition"
       >
         Reset
       </button>
-
-    </div>
+    </form>
   );
 }

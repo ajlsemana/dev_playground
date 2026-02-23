@@ -15,7 +15,7 @@ export type CasesFilters = {
 
 export function useCases() {
   const router = useRouter();
-  const searchParams = useSearchParams();  
+  const searchParams = useSearchParams();
 
   const page = Number(searchParams.get("page") || 1);
   const limit = Number(searchParams.get("limit") || 10);
@@ -26,12 +26,12 @@ export function useCases() {
     assignedTo: searchParams.get("assignedTo") || "",
     dpdMin: searchParams.get("dpdMin") || "",
     dpdMax: searchParams.get("dpdMax") || "",
-  }), [searchParams]);  
+  }), [searchParams]);
 
   const [rows, setRows] = useState<Case[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);  
+  const [error, setError] = useState<string | null>(null);
 
   const query: GetCasesParams = useMemo(() => {
     const dpdMin = filters.dpdMin ? Number(filters.dpdMin) : undefined;
@@ -48,7 +48,7 @@ export function useCases() {
       sortBy: "createdAt",
       sortOrder: "desc",
     };
-  }, [filters, page, limit]);  
+  }, [filters, page, limit]);
 
   function updateUrl(next: Record<string, any>) {
     const params = new URLSearchParams(searchParams.toString());
@@ -62,7 +62,7 @@ export function useCases() {
     });
 
     router.push(`?${params.toString()}`);
-  }  
+  }
 
   const setPage = (p: number) => {
     updateUrl({ ...filters, page: p, limit });
@@ -82,7 +82,7 @@ export function useCases() {
 
   const resetFilters = () => {
     router.push("?page=1&limit=10");
-  };  
+  };
 
   useEffect(() => {
     let active = true;
@@ -96,7 +96,19 @@ export function useCases() {
 
         if (!active) return;
 
-        setRows(res.data);
+        const mapped = res.data.map((c: any) => ({
+          id: c.id,
+          name: c.customer?.name,
+          loanId: c.loanId,
+          dpd: c.dpd,
+          stage: c.stage,
+          status: c.status,
+          assignedTo: c.assignedTo,
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt
+        }));
+
+        setRows(mapped);
         setTotal(res.total);
       } catch (e: any) {
         if (!active) return;
@@ -111,7 +123,7 @@ export function useCases() {
     return () => {
       active = false;
     };
-  }, [query]);  
+  }, [query]);
 
   const totalPages = limit ? Math.ceil((total ?? 0) / limit) : 1;
 

@@ -45,7 +45,7 @@ export default function CasesTable({ rows }: Props) {
               </td>
 
               <td className="px-4 py-3">
-                {c.customerName}
+                {c.name}
               </td>
 
               <td className="px-4 py-3">

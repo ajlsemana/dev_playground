@@ -11,7 +11,7 @@ export type CaseStage =
 
 export type Case = {
   id: number;
-  customerName: string;
+  name: string;
   loanId: string;
   dpd: number;
   stage: CaseStage;

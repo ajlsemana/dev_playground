@@ -15,5 +15,31 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: dev_test_api
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgres://admin:admin@postgres:5432/devdb
+    depends_on:
+      - postgres
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dev_test_web
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    depends_on:
+      - api
+
 volumes:
   postgres_data:
