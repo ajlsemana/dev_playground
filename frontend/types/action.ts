@@ -10,7 +10,7 @@ export type ActionOutcome =
   | "PAID"
   | "WRONG_NUMBER";
 
-export interface ActionLog {
+export type ActionLog = {
   id: number;
   type: ActionType;
   outcome: ActionOutcome;

@@ -9,7 +9,7 @@ export type CaseStage =
   | "HARD"
   | "LEGAL";
 
-export interface Case {
+export type Case = {
   id: number;
   customerName: string;
   loanId: string;
@@ -20,3 +20,35 @@ export interface Case {
   createdAt: string;
   updatedAt: string;
 }
+
+export type Customer = {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  country: string;
+  riskScore: number;
+};
+
+export type Loan = {
+  id: number;
+  principal: number;
+  outstanding: number;
+  dueDate: string;
+  status: string;
+};
+
+export type ActionLog = {
+  id: number;
+  caseId: number;
+  type: string;
+  outcome: string;
+  notes: string;
+  createdAt: string;
+};
+
+export type CaseDetails = Omit<Case, "customerName" | "loanId"> & {
+  customer: Customer;
+  loan: Loan;
+  actions: ActionLog[];
+};
